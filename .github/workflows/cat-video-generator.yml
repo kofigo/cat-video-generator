@@ -1,0 +1,54 @@
+name: Generate Daily Cat Video
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Daily at 9 AM UTC
+  workflow_dispatch:     # Manual trigger button
+
+jobs:
+  generate-video:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg espeak espeak-data libespeak1 libespeak-dev
+        echo "System dependencies installed"
+    
+    - name: Install Python dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        echo "Python dependencies installed"
+    
+    - name: Generate cat video
+      run: |
+        python run_generator.py
+        echo "Video generation completed"
+    
+    - name: List generated files
+      run: |
+        echo "Files in cat_videos directory:"
+        ls -la cat_videos/ || echo "No cat_videos directory found"
+    
+    - name: Upload video as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cat-video-${{ github.run_number }}
+        path: cat_videos/
+        retention-days: 30
+      if: always()
+    
+    - name: Show completion message
+      run: |
+        echo "🎉 Cat video generation workflow completed!"
+        echo "📁 Check the 'Artifacts' section to download your video"
