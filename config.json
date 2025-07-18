@@ -1,0 +1,9 @@
+{
+  "output_directory": "./cat_videos",
+  "video_duration": 15,
+  "video_resolution": [1080, 1920],
+  "font_path": null,
+  "tts_rate": 150,
+  "tts_volume": 0.8,
+  "background_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7"]
+}
